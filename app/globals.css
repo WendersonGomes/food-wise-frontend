@@ -1,26 +1,51 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f8faf7;
+  --surface: #ffffff;
+  --surface-strong: #edf3ec;
+  --foreground: #162018;
+  --muted-foreground: #647067;
+  --border: #dbe5dc;
+  --accent: #2f7d46;
+  --accent-strong: #246538;
+  --accent-soft: #dff2e4;
+  --ring: #74b687;
+}
+
+:root[data-theme="dark"] {
+  --background: #10140f;
+  --surface: #171d16;
+  --surface-strong: #20281f;
+  --foreground: #eef6ed;
+  --muted-foreground: #a7b4a6;
+  --border: #2d382c;
+  --accent: #74c98a;
+  --accent-strong: #8edb9f;
+  --accent-soft: #203b28;
+  --ring: #74c98a;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-sans: Arial, Helvetica, sans-serif;
+  --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+::selection {
+  background: var(--accent-soft);
+  color: var(--foreground);
 }
