@@ -35,7 +35,7 @@ export function NavButton({ label, href, icon, onClick }: NavButtonProps) {
         className={cn(
           "flex min-h-11 items-center gap-3 rounded-3xl px-3 text-sm font-bold",
           isActive
-            ? "bg-(--accent) text-white font-bold shadow-[0_14px_36px_rgba(47,125,70,0.24)]"
+            ? "bg-(--accent) text-white font-bold"
             : "text-(--muted-foreground) font-bold hover:bg-(--surface-strong) hover:text-foreground",
         )}
       >
