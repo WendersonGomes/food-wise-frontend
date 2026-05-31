@@ -119,22 +119,22 @@ export default function InventoryPage() {
               className="grid grid-cols-1 items-center gap-3 sm:grid-cols-[1.2fr_0.8fr_0.8fr_auto]"
             >
               <div className="flex items-center gap-3">
-                <span className="flex h-10 w-10 items-center justify-center rounded-3xl bg-[var(--accent-soft)] text-[var(--accent)]">
+                <span className="flex h-10 w-10 items-center justify-center rounded-3xl bg-(--accent-soft) text-(--accent)">
                   <Icon className="h-5 w-5" strokeWidth={1.9} />
                 </span>
                 <div>
-                  <p className="font-semibold text-[var(--foreground)]">
+                  <p className="font-semibold text-foreground">
                     {food.name}
                   </p>
-                  <p className="text-sm text-[var(--muted-foreground)]">
+                  <p className="text-sm text-(--muted-foreground)">
                     {food.quantity}
                   </p>
                 </div>
               </div>
-              <span className="text-sm text-[var(--muted-foreground)]">
+              <span className="text-sm text(--muted-foreground)">
                 {food.place}
               </span>
-              <span className="text-sm text-[var(--accent)]">
+              <span className="text-sm text-(--accent)">
                 {formatExpiration(food.expiresAt)}
               </span>
               <Button
@@ -153,10 +153,10 @@ export default function InventoryPage() {
 
       <Modal isOpen={isModalOpen} title={modalTitle} onClose={closeModal}>
         <form className="grid gap-4" onSubmit={handleSubmit}>
-          <label className="grid gap-2 text-sm font-medium text-[var(--foreground)]">
+          <label className="grid gap-2 text-sm font-medium text(--foreground]">
             Name
             <input
-              className="min-h-11 rounded-3xl bg-[var(--background)] px-4 text-sm text-[var(--foreground)] outline-none"
+              className="min-h-11 rounded-3xl bg-background px-4 text-sm text-foreground outline-none"
               onChange={(event) =>
                 setForm((currentForm) => ({
                   ...currentForm,
@@ -169,10 +169,10 @@ export default function InventoryPage() {
             />
           </label>
 
-          <label className="grid gap-2 text-sm font-medium text-[var(--foreground)]">
+          <label className="grid gap-2 text-sm font-medium text-foreground">
             Storage
             <select
-              className="min-h-11 rounded-3xl bg-[var(--background)] px-4 text-sm text-[var(--foreground)] outline-none"
+              className="min-h-11 rounded-3xl bg--background px-4 text-sm text-foreground outline-none"
               onChange={(event) =>
                 setForm((currentForm) => ({
                   ...currentForm,
@@ -187,10 +187,10 @@ export default function InventoryPage() {
             </select>
           </label>
 
-          <label className="grid gap-2 text-sm font-medium text-[var(--foreground)]">
+          <label className="grid gap-2 text-sm font-medium text-foreground">
             Quantity
             <input
-              className="min-h-11 rounded-3xl bg-[var(--background)] px-4 text-sm text-[var(--foreground)] outline-none"
+              className="min-h-11 rounded-3xl bg--background px-4 text-sm text-foreground outline-none"
               onChange={(event) =>
                 setForm((currentForm) => ({
                   ...currentForm,
@@ -203,10 +203,10 @@ export default function InventoryPage() {
             />
           </label>
 
-          <label className="grid gap-2 text-sm font-medium text-[var(--foreground)]">
+          <label className="grid gap-2 text-sm font-medium text-foreground">
             Expiration date
             <input
-              className="min-h-11 rounded-3xl bg-[var(--background)] px-4 text-sm text-[var(--foreground)] outline-none"
+              className="min-h-11 rounded-3xl bg--background px-4 text-sm text-foreground outline-none"
               onChange={(event) =>
                 setForm((currentForm) => ({
                   ...currentForm,

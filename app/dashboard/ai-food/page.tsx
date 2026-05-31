@@ -44,13 +44,13 @@ export default function FoodAIPage() {
       title="Food AI"
       description="Ask questions, use ready-made prompts, and analyze food photos in one place."
     >
-      <Card className="mx-auto flex min-h-[34rem] w-full max-w-4xl flex-col p-4 sm:p-5">
+      <Card className="mx-auto flex min-h-136 w-full max-w-4xl flex-col p-4 sm:p-5">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-3">
-            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-3xl bg-[var(--accent-soft)] text-[var(--accent)]">
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-3xl bg-(--accent-soft) text-(--accent)">
               <MessageCircle className="h-5 w-5" strokeWidth={1.9} />
             </span>
-            <h2 className="text-lg font-semibold text-[var(--foreground)]">
+            <h2 className="text-lg font-semibold text-foreground">
               Food chat
             </h2>
           </div>
@@ -79,9 +79,9 @@ export default function FoodAIPage() {
           {messages.map((message) => (
             <div
               key={message.text}
-              className="max-w-[92%] rounded-3xl bg-[var(--background)] p-3 text-sm leading-6 text-[var(--foreground)] shadow-[0_10px_28px_rgba(15,23,42,0.06)] sm:max-w-[78%] sm:p-4"
+              className="max-w-[92%] rounded-3xl bg-background p-3 text-sm leading-6 text-foreground shadow-[0_10px_28px_rgba(15,23,42,0.06)] sm:max-w-[78%] sm:p-4"
             >
-              <p className="mb-1 flex items-center gap-2 font-semibold text-[var(--accent)]">
+              <p className="mb-1 flex items-center gap-2 font-semibold text(--accent]">
                 {message.from === "AI" ? (
                   <Bot className="h-4 w-4" strokeWidth={1.9} />
                 ) : (
@@ -94,7 +94,7 @@ export default function FoodAIPage() {
           ))}
         </div>
 
-        <div className="mt-4 flex min-h-12 items-center justify-between rounded-3xl bg-[var(--background)] px-4 text-sm text-[var(--muted-foreground)] shadow-inner">
+        <div className="mt-4 flex min-h-12 items-center justify-between rounded-3xl bg--background px-4 text-sm text-(--muted-foreground) shadow-inner">
           <span>Ask Food AI</span>
           <Send className="h-4 w-4" strokeWidth={1.9} />
         </div>
@@ -109,7 +109,7 @@ export default function FoodAIPage() {
           {quickPrompts.map((prompt) => (
             <button
               key={prompt}
-              className="rounded-3xl bg-[var(--background)] px-4 py-3 text-left text-sm font-medium text-[var(--foreground)] transition-colors hover:bg-[var(--surface-strong)]"
+              className="rounded-3xl bg--background px-4 py-3 text-left text-sm font-medium text-foreground transition-colors hover:bg-(--surface-strong)"
               type="button"
             >
               {prompt}
@@ -123,15 +123,15 @@ export default function FoodAIPage() {
         title="Photo analysis"
         onClose={() => setActiveModal(null)}
       >
-        <div className="flex min-h-40 items-center justify-center rounded-3xl bg-[var(--background)] text-center text-sm text-[var(--muted-foreground)] shadow-inner">
+        <div className="flex min-h-40 items-center justify-center rounded-3xl bg--background text-center text-sm text-(--muted-foreground) shadow-inner">
           <div className="flex flex-col items-center gap-3 px-4">
-            <span className="flex h-14 w-14 items-center justify-center rounded-3xl bg-[var(--accent-soft)] text-[var(--accent)]">
+            <span className="flex h-14 w-14 items-center justify-center rounded-3xl bg-(--accent-soft) text-(--accent)">
               <ImageUp className="h-7 w-7" strokeWidth={1.9} />
             </span>
             Upload or capture a food photo
           </div>
         </div>
-        <div className="mt-4 grid gap-2 text-sm text-[var(--muted-foreground)]">
+        <div className="mt-4 grid gap-2 text-sm text-(--muted-foreground)">
           <p>Identified food: waiting for image</p>
           <p>Suggested location: fridge, freezer, or pantry</p>
           <p>Next step: confirm before saving to inventory</p>
