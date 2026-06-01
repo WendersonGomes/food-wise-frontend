@@ -1,7 +1,1 @@
-"use client";
-
-import type { ReactNode } from "react";
-
-export function AuthGuard({ children }: { children: ReactNode }) {
-  return <>{children}</>;
-}
+export { AuthGuard } from "@/components/auth/AuthGuard";

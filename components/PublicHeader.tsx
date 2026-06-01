@@ -19,7 +19,7 @@ export function PublicHeader() {
       <div className="mx-auto flex min-h-20 w-full max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
         <BrandLogo href="/login" />
         <Button
-          aria-label={theme === "dark" ? "Enable light theme" : "Enable dark theme"}
+          aria-label={theme === "dark" ? "Ativar tema claro" : "Ativar tema escuro"}
           size="icon"
           variant="secondary"
           onClick={toggleTheme}

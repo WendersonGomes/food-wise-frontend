@@ -1,29 +1,19 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { LogOut, Menu, Moon, Sun } from "lucide-react";
+import { Menu, Moon, Sun } from "lucide-react";
+import { UserMenu } from "@/components/auth/UserMenu";
 import { BrandLogo } from "@/components/BrandLogo";
 import { Button } from "@/components/Button";
-import { Modal } from "@/components/Modal";
 import { NavButton } from "@/components/NavButton";
 import { Sidebar } from "@/components/Sidebar";
 import { useTheme } from "@/hooks/useTheme";
 import { navigationItems } from "@/lib/navigation";
-import { clearStoredSession } from "@/services/auth";
 
 export function Header() {
-  const router = useRouter();
   const { theme, toggleTheme } = useTheme();
   const [isSidebarOpen, setSidebarOpen] = useState(false);
-  const [isLogoutOpen, setLogoutOpen] = useState(false);
-
-  function handleLogout() {
-    clearStoredSession();
-    setLogoutOpen(false);
-    router.replace("/login");
-  }
 
   return (
     <>
@@ -43,19 +33,8 @@ export function Header() {
           </nav>
 
           <div className="flex items-center gap-2">
-            <div className="hidden md:inline-flex">
-              <Button
-                className="w-full justify-start"
-                icon={<LogOut className="h-5 w-5" strokeWidth={1.9} />}
-                variant="ghost"
-                onClick={isLogoutOpen ? handleLogout : () => setLogoutOpen(true)}
-              >
-                Logout
-              </Button>
-            </div>
-
             <Button
-              aria-label={theme === "dark" ? "Enable light theme" : "Enable dark theme"}
+              aria-label={theme === "dark" ? "Ativar tema claro" : "Ativar tema escuro"}
               size="icon"
               variant="secondary"
               onClick={toggleTheme}
@@ -66,8 +45,9 @@ export function Header() {
                 <Moon className="h-5 w-5" strokeWidth={1.9} />
               )}
             </Button>
+            <UserMenu />
             <Button
-              aria-label="Open menu"
+              aria-label="Abrir menu"
               className="lg:hidden"
               size="icon"
               variant="secondary"
@@ -80,24 +60,6 @@ export function Header() {
       </motion.header>
 
       <Sidebar isOpen={isSidebarOpen} onClose={() => setSidebarOpen(false)} />
-
-      <Modal
-        isOpen={isLogoutOpen}
-        title="End session"
-        onClose={() => setLogoutOpen(false)}
-      >
-        <p className="text-sm leading-6 text-(--muted-foreground)">
-          Your session will be closed in this browser.
-        </p>
-        <div className="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
-          <Button variant="secondary" onClick={() => setLogoutOpen(false)}>
-            Cancel
-          </Button>
-          <Button variant="danger" onClick={handleLogout}>
-            Logout
-          </Button>
-        </div>
-      </Modal>
     </>
   );
 }

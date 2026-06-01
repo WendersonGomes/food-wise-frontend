@@ -1,14 +1,13 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Leaf, LogOut, X } from "lucide-react";
+import { LogOut, X } from "lucide-react";
+import { LogoutConfirmationModal } from "@/components/auth/LogoutConfirmationModal";
+import { BrandLogo } from "@/components/BrandLogo";
 import { Button } from "@/components/Button";
 import { NavButton } from "@/components/NavButton";
 import { navigationItems } from "@/lib/navigation";
-import { clearStoredSession } from "@/services/auth";
-import { useState } from "react";
-import { Modal } from "./Modal";
 
 type SidebarProps = {
   isOpen: boolean;
@@ -16,13 +15,11 @@ type SidebarProps = {
 };
 
 export function Sidebar({ isOpen, onClose }: SidebarProps) {
-  const router = useRouter();
   const [isLogoutOpen, setLogoutOpen] = useState(false);
 
-  function handleLogout() {
-    clearStoredSession();
+  function closeAfterLogout() {
+    setLogoutOpen(false);
     onClose();
-    router.replace("/login");
   }
 
   return (
@@ -41,22 +38,18 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
             animate={{ x: 0 }}
             exit={{ x: "-100%" }}
             transition={{
-              type: "spring", stiffness: 300,
-              damping: 20, duration: 0.22, ease: "easeOut"
+              type: "spring",
+              stiffness: 300,
+              damping: 20,
+              duration: 0.22,
+              ease: "easeOut",
             }}
             onMouseDown={(event) => event.stopPropagation()}
           >
             <div className="mb-6 flex items-center justify-between gap-3">
-              <div className="flex items-center gap-2">
-                <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-(--accent-soft) text-(--accent)">
-                  <Leaf className="h-6 w-6" strokeWidth={1.9} />
-                </span>
-                <span className="text-base font-bold text-foreground">
-                  FoodWise
-                </span>
-              </div>
+              <BrandLogo href="/dashboard" onClick={onClose} />
               <Button
-                aria-label="Close menu"
+                aria-label="Fechar menu"
                 size="icon"
                 variant="ghost"
                 onClick={onClose}
@@ -76,29 +69,18 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                 className="w-full justify-start"
                 icon={<LogOut className="h-5 w-5" strokeWidth={1.9} />}
                 variant="ghost"
-                onClick={isLogoutOpen ? handleLogout : () => setLogoutOpen(true)}
+                onClick={() => setLogoutOpen(true)}
               >
-                Logout
+                Sair
               </Button>
             </div>
           </motion.div>
-          <Modal
+
+          <LogoutConfirmationModal
             isOpen={isLogoutOpen}
-            title="End session"
             onClose={() => setLogoutOpen(false)}
-          >
-            <p className="text-sm leading-6 text-(--muted-foreground)">
-              Your session will be closed in this browser.
-            </p>
-            <div className="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
-              <Button variant="secondary" onClick={() => setLogoutOpen(false)}>
-                Cancel
-              </Button>
-              <Button variant="danger" onClick={handleLogout}>
-                Logout
-              </Button>
-            </div>
-          </Modal>
+            onLoggedOut={closeAfterLogout}
+          />
         </motion.aside>
       ) : null}
     </AnimatePresence>

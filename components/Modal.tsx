@@ -1,7 +1,8 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import type { ReactNode } from "react";
+import { useId, type ReactNode } from "react";
+import { createPortal } from "react-dom";
 import { X } from "lucide-react";
 import { Button } from "@/components/Button";
 
@@ -13,7 +14,13 @@ type ModalProps = {
 };
 
 export function Modal({ isOpen, title, children, onClose }: ModalProps) {
-  return (
+  const titleId = useId();
+
+  if (typeof document === "undefined") {
+    return null;
+  }
+
+  return createPortal(
     <AnimatePresence>
       {isOpen ? (
         <motion.div
@@ -23,7 +30,7 @@ export function Modal({ isOpen, title, children, onClose }: ModalProps) {
           exit={{ opacity: 0 }}
           role="dialog"
           aria-modal="true"
-          aria-labelledby="modal-title"
+          aria-labelledby={titleId}
           onMouseDown={onClose}
         >
           <motion.div
@@ -36,13 +43,13 @@ export function Modal({ isOpen, title, children, onClose }: ModalProps) {
           >
             <div className="mb-4 flex items-center justify-between gap-3">
               <h2
-                id="modal-title"
+                id={titleId}
                 className="text-lg font-semibold text-foreground"
               >
                 {title}
               </h2>
               <Button
-                aria-label="Close modal"
+                aria-label="Fechar modal"
                 size="icon"
                 variant="ghost"
                 onClick={onClose}
@@ -54,6 +61,7 @@ export function Modal({ isOpen, title, children, onClose }: ModalProps) {
           </motion.div>
         </motion.div>
       ) : null}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body,
   );
 }
