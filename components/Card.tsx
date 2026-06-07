@@ -12,7 +12,7 @@ export function Card({ className, ...props }: HTMLMotionProps<"div">) {
       whileHover={{ y: -3 }}
       transition={{ duration: 0.22, ease: "easeOut" }}
       className={cn(
-        "rounded-3xl bg-[var(--surface)] p-5 shadow-[0_18px_55px_rgba(15,23,42,0.08)]",
+        "rounded-3xl bg-(--surface) p-5 shadow-[0_18px_55px_rgba(15,23,42,0.08)]",
         className,
       )}
       {...props}
