@@ -1,14 +1,9 @@
-import { apiFetch } from "@/services/api";
+import { buildGatewayUrl, gatewayFetch, gatewayLiveness } from "@/lib/api/gateway-client";
 import type { AuthUser } from "@/types/auth";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
-
-if (!API_URL) {
-  throw new Error("NEXT_PUBLIC_API_URL não foi configurada");
-}
-
-export function loginWithGoogle(): void {
-  window.location.href = `${API_URL}/api/auth/google`;
+export async function loginWithGoogle(): Promise<void> {
+  await gatewayLiveness();
+  window.location.assign(buildGatewayUrl("/api/auth/google"));
 }
 
 function getRecord(value: unknown): Record<string, unknown> | null {
@@ -58,13 +53,13 @@ function normalizeAuthUser(payload: unknown): AuthUser {
 }
 
 export async function getCurrentUser(): Promise<AuthUser> {
-  const profile = await apiFetch<unknown>("/api/auth/me");
+  const profile = await gatewayFetch<unknown>("/api/auth/me");
 
   return normalizeAuthUser(profile);
 }
 
 export async function logout(): Promise<void> {
-  await apiFetch<{ success: boolean }>("/api/auth/logout", {
+  await gatewayFetch<{ success: boolean }>("/api/auth/logout", {
     method: "POST",
   });
 }

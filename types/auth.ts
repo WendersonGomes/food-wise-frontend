@@ -12,7 +12,7 @@ export type AuthContextValue = {
   isLoading: boolean;
   isAuthenticated: boolean;
   error: string | null;
-  loginWithGoogle: () => void;
+  loginWithGoogle: () => Promise<void>;
   logout: () => Promise<void>;
   refreshUser: () => Promise<void>;
 };

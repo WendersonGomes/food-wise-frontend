@@ -16,20 +16,20 @@ import { Modal } from "@/components/Modal";
 import { PageShell } from "@/components/PageShell";
 
 const quickPrompts = [
-  "What should I cook with food expiring soon?",
-  "How should I store fresh vegetables?",
-  "Can you identify this food from a photo?",
-  "Create a low-waste meal plan.",
+  "O que posso cozinhar com alimentos próximos do vencimento?",
+  "Como devo armazenar vegetais frescos?",
+  "Você consegue identificar este alimento por foto?",
+  "Crie um plano de refeições com menos desperdício.",
 ];
 
 const messages = [
   {
-    from: "AI",
-    text: "Ask a question about storage, expiration, recipes, or use the actions above for prompts and photo analysis.",
+    from: "IA",
+    text: "Pergunte sobre armazenamento, validade, receitas ou use as ações acima para prompts e análise por foto.",
   },
   {
-    from: "You",
-    text: "Which ingredients should I use first this week?",
+    from: "Você",
+    text: "Quais ingredientes devo usar primeiro nesta semana?",
   },
 ];
 
@@ -40,9 +40,9 @@ export default function FoodAIPage() {
 
   return (
     <PageShell
-      eyebrow="Assistant"
-      title="Food AI"
-      description="Ask questions, use ready-made prompts, and analyze food photos in one place."
+      eyebrow="Assistente"
+      title="IA de alimentos"
+      description="Converse com a IA, use prompts prontos e analise fotos de alimentos em um só lugar."
     >
       <Card className="mx-auto flex min-h-136 w-full max-w-4xl flex-col p-4 sm:p-5">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -51,7 +51,7 @@ export default function FoodAIPage() {
               <MessageCircle className="h-5 w-5" strokeWidth={1.9} />
             </span>
             <h2 className="text-lg font-semibold text-foreground">
-              Food chat
+              Chat de alimentos
             </h2>
           </div>
 
@@ -62,7 +62,7 @@ export default function FoodAIPage() {
               variant="secondary"
               onClick={() => setActiveModal("prompts")}
             >
-              Quick prompts
+              Prompts rápidos
             </Button>
             <Button
               className="w-full sm:w-auto"
@@ -70,7 +70,7 @@ export default function FoodAIPage() {
               variant="secondary"
               onClick={() => setActiveModal("photo")}
             >
-              Photo analysis
+              Análise por foto
             </Button>
           </div>
         </div>
@@ -81,8 +81,8 @@ export default function FoodAIPage() {
               key={message.text}
               className="max-w-[92%] rounded-3xl bg-background p-3 text-sm leading-6 text-foreground shadow-[0_10px_28px_rgba(15,23,42,0.06)] sm:max-w-[78%] sm:p-4"
             >
-              <p className="mb-1 flex items-center gap-2 font-semibold text(--accent]">
-                {message.from === "AI" ? (
+              <p className="mb-1 flex items-center gap-2 font-semibold text-(--accent)">
+                {message.from === "IA" ? (
                   <Bot className="h-4 w-4" strokeWidth={1.9} />
                 ) : (
                   <UserRound className="h-4 w-4" strokeWidth={1.9} />
@@ -94,22 +94,22 @@ export default function FoodAIPage() {
           ))}
         </div>
 
-        <div className="mt-4 flex min-h-12 items-center justify-between rounded-3xl bg--background px-4 text-sm text-(--muted-foreground) shadow-inner">
-          <span>Ask Food AI</span>
+        <div className="mt-4 flex min-h-12 items-center justify-between rounded-3xl bg-background px-4 text-sm text-(--muted-foreground) shadow-inner">
+          <span>Pergunte à IA de alimentos</span>
           <Send className="h-4 w-4" strokeWidth={1.9} />
         </div>
       </Card>
 
       <Modal
         isOpen={activeModal === "prompts"}
-        title="Quick prompts"
+        title="Prompts rápidos"
         onClose={() => setActiveModal(null)}
       >
         <div className="grid gap-2">
           {quickPrompts.map((prompt) => (
             <button
               key={prompt}
-              className="rounded-3xl bg--background px-4 py-3 text-left text-sm font-medium text-foreground transition-colors hover:bg-(--surface-strong)"
+              className="rounded-3xl bg-background px-4 py-3 text-left text-sm font-medium text-foreground transition-colors hover:bg-(--surface-strong)"
               type="button"
             >
               {prompt}
@@ -120,21 +120,21 @@ export default function FoodAIPage() {
 
       <Modal
         isOpen={activeModal === "photo"}
-        title="Photo analysis"
+        title="Análise por foto"
         onClose={() => setActiveModal(null)}
       >
-        <div className="flex min-h-40 items-center justify-center rounded-3xl bg--background text-center text-sm text-(--muted-foreground) shadow-inner">
+        <div className="flex min-h-40 items-center justify-center rounded-3xl bg-background text-center text-sm text-(--muted-foreground) shadow-inner">
           <div className="flex flex-col items-center gap-3 px-4">
             <span className="flex h-14 w-14 items-center justify-center rounded-3xl bg-(--accent-soft) text-(--accent)">
               <ImageUp className="h-7 w-7" strokeWidth={1.9} />
             </span>
-            Upload or capture a food photo
+            Envie ou capture uma foto do alimento
           </div>
         </div>
         <div className="mt-4 grid gap-2 text-sm text-(--muted-foreground)">
-          <p>Identified food: waiting for image</p>
-          <p>Suggested location: fridge, freezer, or pantry</p>
-          <p>Next step: confirm before saving to inventory</p>
+          <p>Alimento identificado: aguardando imagem</p>
+          <p>Local sugerido: geladeira, freezer ou despensa</p>
+          <p>Próximo passo: confirme antes de salvar no estoque</p>
         </div>
       </Modal>
     </PageShell>

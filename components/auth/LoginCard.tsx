@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { LoginButton } from "@/components/auth/LoginButton";
+import { Notification } from "@/components/ui/Notification";
 
 type LoginCardProps = {
   error?: string | null;
@@ -53,12 +54,7 @@ export function LoginCard({ error }: LoginCardProps) {
         </p>
 
         {error ? (
-          <p
-            className="mt-4 rounded-3xl bg-red-50 px-4 py-3 text-sm leading-6 text-red-700 dark:bg-red-950/40 dark:text-red-300"
-            role="alert"
-          >
-            {error}
-          </p>
+          <Notification className="mt-4" context="auth" title={error} />
         ) : null}
 
         <LoginButton />

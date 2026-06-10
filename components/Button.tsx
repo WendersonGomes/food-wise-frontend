@@ -17,9 +17,9 @@ type ButtonProps = Omit<HTMLMotionProps<"button">, "children" | "size"> & {
 
 const variantClasses: Record<ButtonVariant, string> = {
   primary:
-    "bg-[var(--accent)] text-white shadow-[0_16px_36px_rgba(47,125,70,0.22)] hover:bg-[var(--accent-strong)]",
+    "bg-[var(--accent)] text-white hover:bg-[var(--accent-strong)]",
   secondary:
-    "bg-[var(--surface)] text-[var(--foreground)] shadow-[0_10px_28px_rgba(15,23,42,0.07)] hover:bg-[var(--surface-strong)]",
+    "bg-[var(--surface)] text-[var(--foreground)] hover:bg-[var(--surface-strong)]",
   ghost:
     "text-[var(--muted-foreground)] hover:bg-[var(--surface-strong)] hover:text-[var(--foreground)]",
   danger:

@@ -5,8 +5,8 @@ export type NavigationItem = {
 };
 
 export const navigationItems: NavigationItem[] = [
-  { label: "Dashboard", href: "/dashboard", icon: "dashboard" },
-  { label: "Inventory", href: "/dashboard/inventory", icon: "stock" },
-  { label: "Food AI", href: "/dashboard/ai-food", icon: "ai" },
-  { label: "Settings", href: "/dashboard/settings", icon: "settings" },
+  { label: "Painel", href: "/dashboard", icon: "dashboard" },
+  { label: "Estoque", href: "/dashboard/inventory", icon: "stock" },
+  { label: "IA de alimentos", href: "/dashboard/ai-food", icon: "ai" },
+  { label: "Configurações", href: "/dashboard/settings", icon: "settings" },
 ];

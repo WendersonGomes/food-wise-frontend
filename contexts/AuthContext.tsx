@@ -9,7 +9,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { ApiError } from "@/services/api";
+import { UnauthorizedError } from "@/lib/api/api-errors";
 import {
   getCurrentUser,
   loginWithGoogle as redirectToGoogle,
@@ -37,7 +37,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } catch (requestError) {
       setUser(null);
 
-      if (!(requestError instanceof ApiError && requestError.status === 401)) {
+      if (!(requestError instanceof UnauthorizedError)) {
         setError(
           "Não foi possível carregar sua sessão. Tente entrar novamente.",
         );
@@ -56,8 +56,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     void refreshUser();
   }, [refreshUser]);
 
-  const loginWithGoogle = useCallback(() => {
-    redirectToGoogle();
+  const loginWithGoogle = useCallback(async () => {
+    await redirectToGoogle();
   }, []);
 
   const logout = useCallback(async () => {

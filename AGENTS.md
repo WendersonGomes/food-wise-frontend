@@ -35,7 +35,7 @@ O frontend do FoodWise deve:
 
 ## UI/UX
 
-- O design deve ser moderno, minimalista e utilizar animações fluidas e performaticas com framer motion.
+- O design deve ser moderno, minimalista e utilizar animações fluidas e performaticas com framer motion sem linhas nas bordas.
 - A experiencia do usuario deve sempre ser levada em consideração.
 - Utilize lucid icons para icones.
 - Todo o site deve ter aspecto arredondado e minimalista.

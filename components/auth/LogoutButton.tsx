@@ -4,6 +4,7 @@ import { useState } from "react";
 import { LoaderCircle, LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/Button";
+import { Notification } from "@/components/ui/Notification";
 import { useAuth } from "@/hooks/useAuth";
 
 type LogoutButtonProps = {
@@ -62,9 +63,7 @@ export function LogoutButton({
       </Button>
 
       {error ? (
-        <p className="mt-2 text-sm leading-6 text-red-600" role="alert">
-          {error}
-        </p>
+        <Notification className="mt-2" context="modal" title={error} />
       ) : null}
     </>
   );

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { LoaderCircle, LogIn } from "lucide-react";
 import { Button } from "@/components/Button";
+import { Notification } from "@/components/ui/Notification";
 import { useAuth } from "@/hooks/useAuth";
 
 export function LoginButton() {
@@ -10,7 +11,7 @@ export function LoginButton() {
   const [isRedirecting, setRedirecting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  function handleLogin() {
+  async function handleLogin() {
     if (isRedirecting) {
       return;
     }
@@ -19,10 +20,12 @@ export function LoginButton() {
     setError(null);
 
     try {
-      loginWithGoogle();
+      await loginWithGoogle();
     } catch {
       setRedirecting(false);
-      setError("Não foi possível iniciar o login. Tente novamente.");
+      setError(
+        "Nao foi possivel concluir o login agora. Tente novamente em instantes.",
+      );
     }
   }
 
@@ -45,9 +48,7 @@ export function LoginButton() {
       </Button>
 
       {error ? (
-        <p className="mt-3 text-sm leading-6 text-red-600" role="alert">
-          {error}
-        </p>
+        <Notification className="mt-3" context="auth" title={error} />
       ) : null}
     </>
   );

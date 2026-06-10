@@ -1,35 +1,98 @@
-import { Archive, Clock, MapPinned, Snowflake, Thermometer, Warehouse } from "lucide-react";
+"use client";
+
+import {
+  Archive,
+  Clock,
+  MapPinned,
+  Snowflake,
+  Thermometer,
+  Warehouse,
+} from "lucide-react";
 import { Card } from "@/components/Card";
+import { DashboardPreviewList } from "@/components/dashboard/DashboardPreviewList";
 import { MobileDashboardNav } from "@/components/MobileDashboardNav";
 import { PageShell } from "@/components/PageShell";
-
-const stats = [
-  { label: "Registered items", value: "3", icon: Archive },
-  { label: "Expiring soon", value: "3", icon: Clock },
-  { label: "Active locations", value: "3", icon: MapPinned },
-];
-
-const locations = [
-  { name: "Fridge", items: "1 item", status: "1 expiring soon", icon: Thermometer },
-  { name: "Freezer", items: "1 item", status: "Stable inventory", icon: Snowflake },
-  { name: "Pantry", items: "1 item", status: "1 to review", icon: Warehouse },
-];
+import { NotificationViewport } from "@/components/ui/NotificationViewport";
+import { DashboardPageSkeleton } from "@/components/ui/skeletons/DashboardPageSkeleton";
+import { useInventoryDashboard } from "@/features/inventory/hooks/use-dashboard";
 
 export default function DashboardPage() {
+  const {
+    data: summary,
+    error,
+    isLoading,
+    lastSyncedAt,
+  } = useInventoryDashboard();
+
+  if (isLoading && !summary) {
+    return <DashboardPageSkeleton />;
+  }
+
+  const stats = [
+    {
+      label: "Itens cadastrados",
+      value: String(summary?.totalItems ?? 0),
+      icon: Archive,
+    },
+    {
+      label: "Vencidos",
+      value: String(summary?.expiredItems ?? 0),
+      icon: Clock,
+    },
+    {
+      label: "Próximos do vencimento",
+      value: String(summary?.expiringSoonItems ?? 0),
+      icon: MapPinned,
+    },
+  ];
+
+  const locations = [
+    {
+      name: "Geladeira",
+      items: `${summary?.fridgeItems ?? 0} itens`,
+      icon: Thermometer,
+    },
+    {
+      name: "Freezer",
+      items: `${summary?.freezerItems ?? 0} itens`,
+      icon: Snowflake,
+    },
+    {
+      name: "Despensa",
+      items: `${summary?.pantryItems ?? 0} itens`,
+      icon: Warehouse,
+    },
+  ];
+
   return (
     <PageShell
-      eyebrow="Overview"
-      title="Dashboard"
-      description="Track your home inventory by expiration date, storage location, and consumption priority."
+      eyebrow="Visão geral"
+      title="Painel"
+      description="Acompanhe seu estoque por data de validade, local de armazenamento e prioridade de consumo."
     >
       <MobileDashboardNav />
 
+      {error ? (
+        <NotificationViewport
+          autoDismissMs={5500}
+          className="max-w-xl"
+          description={
+            lastSyncedAt
+              ? `Ultima atualizacao: ${new Intl.DateTimeFormat("pt-BR", {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                }).format(lastSyncedAt)}.`
+              : "As informacoes serao atualizadas automaticamente."
+          }
+          isOpen
+          title="Nao foi possivel atualizar o painel agora."
+          variant="warning"
+        />
+      ) : null}
+
       <section className="grid gap-3 sm:grid-cols-3 sm:gap-4">
         {stats.map((stat) => (
-          <Card
-            key={stat.label}
-            className="p-4 sm:p-5"
-          >
+          <Card key={stat.label} className="p-4 sm:p-5">
             <div className="flex items-center justify-between gap-3">
               <p className="text-sm text-(--muted-foreground)">
                 {stat.label}
@@ -47,10 +110,7 @@ export default function DashboardPage() {
 
       <section className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 lg:gap-4">
         {locations.map((location) => (
-          <Card
-            key={location.name}
-            className="p-4 sm:p-5"
-          >
+          <Card key={location.name} className="p-4 sm:p-5">
             <div className="flex items-center gap-3">
               <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-(--accent-soft) text-(--accent)">
                 <location.icon className="h-5 w-5" strokeWidth={1.9} />
@@ -62,11 +122,16 @@ export default function DashboardPage() {
             <p className="mt-4 text-2xl font-bold text-(--accent)">
               {location.items}
             </p>
-            <p className="mt-2 text-sm text-(--muted-foreground)">
-              {location.status}
-            </p>
           </Card>
         ))}
+      </section>
+
+      <section className="grid min-w-0 gap-4 lg:grid-cols-2">
+        <DashboardPreviewList
+          emptyMessage="Nenhum item recente."
+          items={summary?.recentItems ?? []}
+          title="Itens recentes"
+        />
       </section>
     </PageShell>
   );

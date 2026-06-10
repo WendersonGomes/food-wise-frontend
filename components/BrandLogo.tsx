@@ -13,7 +13,7 @@ export function BrandLogo({ href = "/", onClick }: BrandLogoProps) {
     <Link href={href} className="flex items-center gap-3" onClick={onClick}>
       <Image
         src="/coala-logo-variant.svg"
-        alt="FoodWise logo"
+        alt="Logo do FoodWise"
         width={44}
         height={44}
         priority

@@ -5,15 +5,23 @@ import { useId, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { X } from "lucide-react";
 import { Button } from "@/components/Button";
+import { cn } from "@/lib/utils";
 
 type ModalProps = {
   isOpen: boolean;
   title: string;
   children: ReactNode;
+  size?: "md" | "lg";
   onClose: () => void;
 };
 
-export function Modal({ isOpen, title, children, onClose }: ModalProps) {
+export function Modal({
+  isOpen,
+  title,
+  children,
+  size = "md",
+  onClose,
+}: ModalProps) {
   const titleId = useId();
 
   if (typeof document === "undefined") {
@@ -34,7 +42,10 @@ export function Modal({ isOpen, title, children, onClose }: ModalProps) {
           onMouseDown={onClose}
         >
           <motion.div
-            className="w-full max-w-md rounded-3xl bg-(--surface) p-5 shadow-[0_28px_90px_rgba(0,0,0,0.24)]"
+            className={cn(
+              "max-h-[calc(100vh-2rem)] w-full overflow-y-auto rounded-3xl bg-(--surface) p-5 shadow-[0_28px_90px_rgba(0,0,0,0.24)]",
+              size === "lg" ? "max-w-3xl" : "max-w-md",
+            )}
             initial={{ opacity: 0, scale: 0.96, y: 16 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.96, y: 16 }}
