@@ -9,7 +9,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { ApiError } from "@/services/api";
+import { ApiConfigurationError, ApiError } from "@/services/api";
 import {
   getCurrentUser,
   loginWithGoogle as redirectToGoogle,
@@ -36,6 +36,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(currentUser);
     } catch (requestError) {
       setUser(null);
+
+      if (requestError instanceof ApiConfigurationError) {
+        return;
+      }
 
       if (!(requestError instanceof ApiError && requestError.status === 401)) {
         setError(

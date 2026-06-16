@@ -1,14 +1,8 @@
-import { apiFetch } from "@/services/api";
+import { apiFetch, getApiUrl } from "@/services/api";
 import type { AuthUser } from "@/types/auth";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
-
-if (!API_URL) {
-  throw new Error("NEXT_PUBLIC_API_URL não foi configurada");
-}
-
 export function loginWithGoogle(): void {
-  window.location.href = `${API_URL}/api/auth/google`;
+  window.location.href = `${getApiUrl()}/api/auth/google`;
 }
 
 function getRecord(value: unknown): Record<string, unknown> | null {

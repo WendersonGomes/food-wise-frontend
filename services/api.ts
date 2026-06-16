@@ -1,7 +1,18 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
+export class ApiConfigurationError extends Error {
+  constructor(message = "NEXT_PUBLIC_API_URL não foi configurada") {
+    super(message);
+    this.name = "ApiConfigurationError";
+  }
+}
 
-if (!API_URL) {
-  throw new Error("NEXT_PUBLIC_API_URL não foi configurada");
+export function getApiUrl(): string {
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
+  if (!apiUrl) {
+    throw new ApiConfigurationError();
+  }
+
+  return apiUrl;
 }
 
 export class ApiError extends Error {
@@ -18,7 +29,9 @@ export async function apiFetch<T>(
   path: string,
   options: RequestInit = {},
 ): Promise<T> {
-  const response = await fetch(`${API_URL}${path}`, {
+  const apiUrl = getApiUrl();
+
+  const response = await fetch(`${apiUrl}${path}`, {
     ...options,
     credentials: "include",
     headers: {

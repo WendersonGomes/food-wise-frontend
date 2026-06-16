@@ -4,6 +4,7 @@ import { useState } from "react";
 import { LoaderCircle, LogIn } from "lucide-react";
 import { Button } from "@/components/Button";
 import { useAuth } from "@/hooks/useAuth";
+import { ApiConfigurationError } from "@/services/api";
 
 export function LoginButton() {
   const { loginWithGoogle } = useAuth();
@@ -20,9 +21,13 @@ export function LoginButton() {
 
     try {
       loginWithGoogle();
-    } catch {
+    } catch (loginError) {
       setRedirecting(false);
-      setError("Não foi possível iniciar o login. Tente novamente.");
+      setError(
+        loginError instanceof ApiConfigurationError
+          ? "Configure NEXT_PUBLIC_API_URL no .env.local para entrar com Google."
+          : "Não foi possível iniciar o login. Tente novamente.",
+      );
     }
   }
 
