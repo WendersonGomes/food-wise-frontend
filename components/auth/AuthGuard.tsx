@@ -8,15 +8,15 @@ import { useAuth } from "@/hooks/useAuth";
 export function AuthGuard({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
-  const { isAuthenticated, isLoading } = useAuth();
+  const { status } = useAuth();
 
   useEffect(() => {
-    if (!isLoading && !isAuthenticated) {
+    if (status === "unauthenticated") {
       router.replace("/login");
     }
-  }, [isAuthenticated, isLoading, router]);
+  }, [router, status]);
 
-  if (isLoading || !isAuthenticated) {
+  if (status !== "authenticated") {
     return <ProtectedPageSkeleton pathname={pathname} />;
   }
 

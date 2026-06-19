@@ -1,4 +1,4 @@
-import { buildGatewayUrl, gatewayFetch } from "@/lib/api/gateway-client";
+import { apiFetch, buildApiUrl } from "@/lib/api/gateway-client";
 import type { FoodPhoto } from "@/types/inventory";
 import { getPhotosFromResponse, normalizePhoto } from "./inventory-mappers";
 
@@ -8,7 +8,7 @@ export function getInventoryPhotoContentUrl(
   photoId: string,
   variant: "image" | "thumbnail" = "thumbnail",
 ) {
-  return buildGatewayUrl(
+  return buildApiUrl(
     `/api/inventory/photos/${photoId}/content?variant=${variant}`,
   );
 }
@@ -28,7 +28,7 @@ export function validateInventoryPhotoFile(file: File): string | null {
 export async function getInventoryItemPhotos(
   itemId: string,
 ): Promise<FoodPhoto[]> {
-  const response = await gatewayFetch<unknown>(
+  const response = await apiFetch<unknown>(
     `/api/inventory/items/${itemId}/photos`,
   );
 
@@ -42,7 +42,7 @@ export async function uploadInventoryItemPhoto(
   const form = new FormData();
   form.append("file", file);
 
-  const response = await gatewayFetch<unknown>(
+  const response = await apiFetch<unknown>(
     `/api/inventory/items/${itemId}/photos`,
     {
       method: "POST",
@@ -57,7 +57,7 @@ export async function deleteInventoryItemPhoto(
   itemId: string,
   photoId: string,
 ): Promise<void> {
-  await gatewayFetch<void>(
+  await apiFetch<void>(
     `/api/inventory/items/${itemId}/photos/${photoId}`,
     {
       method: "DELETE",

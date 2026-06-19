@@ -5,11 +5,16 @@ import { LoaderCircle, LogIn } from "lucide-react";
 import { Button } from "@/components/Button";
 import { Notification } from "@/components/ui/Notification";
 import { useAuth } from "@/hooks/useAuth";
+import {
+  getApiErrorSupportCode,
+  getUserFriendlyErrorMessage,
+} from "@/lib/api/api-error-messages";
 
 export function LoginButton() {
   const { loginWithGoogle } = useAuth();
   const [isRedirecting, setRedirecting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [supportCode, setSupportCode] = useState<string | null>(null);
 
   async function handleLogin() {
     if (isRedirecting) {
@@ -18,14 +23,14 @@ export function LoginButton() {
 
     setRedirecting(true);
     setError(null);
+    setSupportCode(null);
 
     try {
       await loginWithGoogle();
-    } catch {
+    } catch (requestError) {
       setRedirecting(false);
-      setError(
-        "Nao foi possivel concluir o login agora. Tente novamente em instantes.",
-      );
+      setError(getUserFriendlyErrorMessage(requestError));
+      setSupportCode(getApiErrorSupportCode(requestError));
     }
   }
 
@@ -48,7 +53,14 @@ export function LoginButton() {
       </Button>
 
       {error ? (
-        <Notification className="mt-3" context="auth" title={error} />
+        <Notification
+          className="mt-3"
+          context="auth"
+          description={
+            supportCode ? `Codigo de suporte: ${supportCode}` : undefined
+          }
+          title={error}
+        />
       ) : null}
     </>
   );

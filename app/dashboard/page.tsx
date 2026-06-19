@@ -8,6 +8,7 @@ import {
   Thermometer,
   Warehouse,
 } from "lucide-react";
+import { Button } from "@/components/Button";
 import { Card } from "@/components/Card";
 import { DashboardPreviewList } from "@/components/dashboard/DashboardPreviewList";
 import { MobileDashboardNav } from "@/components/MobileDashboardNav";
@@ -15,6 +16,10 @@ import { PageShell } from "@/components/PageShell";
 import { NotificationViewport } from "@/components/ui/NotificationViewport";
 import { DashboardPageSkeleton } from "@/components/ui/skeletons/DashboardPageSkeleton";
 import { useInventoryDashboard } from "@/features/inventory/hooks/use-dashboard";
+import {
+  getApiErrorSupportCode,
+  getUserFriendlyErrorMessage,
+} from "@/lib/api/api-error-messages";
 
 export default function DashboardPage() {
   const {
@@ -22,11 +27,15 @@ export default function DashboardPage() {
     error,
     isLoading,
     lastSyncedAt,
+    refetch,
   } = useInventoryDashboard();
 
   if (isLoading && !summary) {
     return <DashboardPageSkeleton />;
   }
+
+  const errorMessage = error ? getUserFriendlyErrorMessage(error) : null;
+  const supportCode = error ? getApiErrorSupportCode(error) : null;
 
   const stats = [
     {
@@ -77,15 +86,26 @@ export default function DashboardPage() {
           autoDismissMs={5500}
           className="max-w-xl"
           description={
-            lastSyncedAt
-              ? `Ultima atualizacao: ${new Intl.DateTimeFormat("pt-BR", {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                }).format(lastSyncedAt)}.`
-              : "As informacoes serao atualizadas automaticamente."
+            supportCode
+              ? `Codigo de suporte: ${supportCode}`
+              : lastSyncedAt
+                ? `Ultima atualizacao: ${new Intl.DateTimeFormat("pt-BR", {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  }).format(lastSyncedAt)}.`
+                : "As informacoes serao atualizadas automaticamente."
           }
           isOpen
-          title="Nao foi possivel atualizar o painel agora."
+          action={
+            <Button
+              size="sm"
+              variant="secondary"
+              onClick={() => void refetch({ force: true }).catch(() => undefined)}
+            >
+              Tentar novamente
+            </Button>
+          }
+          title={errorMessage}
           variant="warning"
         />
       ) : null}

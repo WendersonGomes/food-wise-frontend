@@ -1,4 +1,4 @@
-import { gatewayFetch } from "@/lib/api/gateway-client";
+import { apiFetch } from "@/lib/api/gateway-client";
 import type { CategoryIconName, FoodCategory } from "@/types/inventory";
 import { getCategoriesFromResponse, normalizeCategory } from "./inventory-mappers";
 
@@ -19,7 +19,7 @@ function toCategoryPayload(values: CategoryWriteValues) {
 }
 
 export async function getInventoryCategories(): Promise<FoodCategory[]> {
-  const response = await gatewayFetch<unknown>("/api/inventory/categories");
+  const response = await apiFetch<unknown>("/api/inventory/categories");
 
   return getCategoriesFromResponse(response);
 }
@@ -27,7 +27,7 @@ export async function getInventoryCategories(): Promise<FoodCategory[]> {
 export async function createInventoryCategory(
   values: CategoryWriteValues,
 ): Promise<FoodCategory> {
-  const response = await gatewayFetch<unknown>("/api/inventory/categories", {
+  const response = await apiFetch<unknown>("/api/inventory/categories", {
     method: "POST",
     body: JSON.stringify(toCategoryPayload(values)),
   });
@@ -39,7 +39,7 @@ export async function updateInventoryCategory(
   categoryId: string,
   values: CategoryWriteValues,
 ): Promise<FoodCategory> {
-  const response = await gatewayFetch<unknown>(
+  const response = await apiFetch<unknown>(
     `/api/inventory/categories/${categoryId}`,
     {
       method: "PATCH",
@@ -51,7 +51,7 @@ export async function updateInventoryCategory(
 }
 
 export async function deleteInventoryCategory(categoryId: string): Promise<void> {
-  await gatewayFetch<void>(`/api/inventory/categories/${categoryId}`, {
+  await apiFetch<void>(`/api/inventory/categories/${categoryId}`, {
     method: "DELETE",
   });
 }

@@ -6,6 +6,10 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/Button";
 import { Notification } from "@/components/ui/Notification";
 import { useAuth } from "@/hooks/useAuth";
+import {
+  getApiErrorSupportCode,
+  getUserFriendlyErrorMessage,
+} from "@/lib/api/api-error-messages";
 
 type LogoutButtonProps = {
   className?: string;
@@ -22,6 +26,7 @@ export function LogoutButton({
   const { logout } = useAuth();
   const [isLoading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [supportCode, setSupportCode] = useState<string | null>(null);
 
   async function handleLogout() {
     if (isLoading) {
@@ -30,15 +35,15 @@ export function LogoutButton({
 
     setLoading(true);
     setError(null);
+    setSupportCode(null);
 
     try {
       await logout();
       onLoggedOut?.();
       router.replace("/login");
-    } catch {
-      setError(
-        "Não foi possível sair da conta. Tente novamente em alguns instantes.",
-      );
+    } catch (requestError) {
+      setError(getUserFriendlyErrorMessage(requestError));
+      setSupportCode(getApiErrorSupportCode(requestError));
       setLoading(false);
     }
   }
@@ -63,7 +68,14 @@ export function LogoutButton({
       </Button>
 
       {error ? (
-        <Notification className="mt-2" context="modal" title={error} />
+        <Notification
+          className="mt-2"
+          context="modal"
+          description={
+            supportCode ? `Codigo de suporte: ${supportCode}` : undefined
+          }
+          title={error}
+        />
       ) : null}
     </>
   );

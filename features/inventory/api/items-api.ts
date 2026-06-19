@@ -1,4 +1,4 @@
-import { gatewayFetch } from "@/lib/api/gateway-client";
+import { apiFetch } from "@/lib/api/gateway-client";
 import { type FoodFormSubmitValues, type FoodItem } from "@/types/inventory";
 import { getItemsFromResponse, normalizeFoodItem } from "./inventory-mappers";
 
@@ -70,13 +70,13 @@ function toItemPayload(values: FoodFormSubmitValues): ItemPayload {
 }
 
 export async function getInventoryItems(): Promise<FoodItem[]> {
-  const response = await gatewayFetch<unknown>("/api/inventory/items");
+  const response = await apiFetch<unknown>("/api/inventory/items");
 
   return getItemsFromResponse(response);
 }
 
 export async function getInventoryItem(itemId: string): Promise<FoodItem> {
-  const response = await gatewayFetch<unknown>(`/api/inventory/items/${itemId}`);
+  const response = await apiFetch<unknown>(`/api/inventory/items/${itemId}`);
 
   return normalizeFoodItem(response);
 }
@@ -84,7 +84,7 @@ export async function getInventoryItem(itemId: string): Promise<FoodItem> {
 export async function createInventoryItem(
   values: FoodFormSubmitValues,
 ): Promise<FoodItem> {
-  const response = await gatewayFetch<unknown>("/api/inventory/items", {
+  const response = await apiFetch<unknown>("/api/inventory/items", {
     method: "POST",
     body: JSON.stringify(toItemPayload(values)),
   });
@@ -97,7 +97,7 @@ export async function updateInventoryItem(
   values: FoodFormSubmitValues,
   expectedVersion: number,
 ): Promise<FoodItem> {
-  const response = await gatewayFetch<unknown>(`/api/inventory/items/${itemId}`, {
+  const response = await apiFetch<unknown>(`/api/inventory/items/${itemId}`, {
     method: "PATCH",
     body: JSON.stringify({
       expectedVersion: Number(expectedVersion),
@@ -109,7 +109,7 @@ export async function updateInventoryItem(
 }
 
 export async function deleteInventoryItem(itemId: string): Promise<void> {
-  await gatewayFetch<void>(`/api/inventory/items/${itemId}`, {
+  await apiFetch<void>(`/api/inventory/items/${itemId}`, {
     method: "DELETE",
   });
 }

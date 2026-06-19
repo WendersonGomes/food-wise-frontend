@@ -1,9 +1,29 @@
-import { buildGatewayUrl, gatewayFetch, gatewayLiveness } from "@/lib/api/gateway-client";
+import { ApiClientError } from "@/lib/api/api-errors";
+import { apiFetch } from "@/lib/api/gateway-client";
 import type { AuthUser } from "@/types/auth";
 
+type GoogleAuthUrlResponse = {
+  url?: string;
+};
+
 export async function loginWithGoogle(): Promise<void> {
-  await gatewayLiveness();
-  window.location.assign(buildGatewayUrl("/api/auth/google"));
+  const response = await apiFetch<GoogleAuthUrlResponse>(
+    "/api/auth/google/url",
+  );
+
+  if (!response.url) {
+    throw new ApiClientError({
+      message: "URL de login nao retornada.",
+      code: "AUTH_GOOGLE_OAUTH_URL_MISSING",
+      details: {
+        endpoint: "/api/auth/google/url",
+        method: "GET",
+        bodyJson: response,
+      },
+    });
+  }
+
+  window.location.href = response.url;
 }
 
 function getRecord(value: unknown): Record<string, unknown> | null {
@@ -35,7 +55,11 @@ function normalizeAuthUser(payload: unknown): AuthUser {
   const id = getString(profile, "id", "userId", "sub");
 
   if (!id) {
-    throw new Error("Perfil autenticado inválido");
+    throw new ApiClientError({
+      message: "Perfil autenticado invalido.",
+      code: "INVALID_AUTH_PROFILE",
+      details: payload,
+    });
   }
 
   return {
@@ -53,13 +77,23 @@ function normalizeAuthUser(payload: unknown): AuthUser {
 }
 
 export async function getCurrentUser(): Promise<AuthUser> {
-  const profile = await gatewayFetch<unknown>("/api/auth/me");
+  const profile = await apiFetch<unknown>("/api/auth/me", {
+    skipAuthRetry: true,
+  });
 
   return normalizeAuthUser(profile);
 }
 
-export async function logout(): Promise<void> {
-  await gatewayFetch<{ success: boolean }>("/api/auth/logout", {
+export async function refreshAuthSession(): Promise<void> {
+  await apiFetch<void>("/api/auth/refresh", {
     method: "POST",
+    skipAuthRetry: true,
+  });
+}
+
+export async function logout(): Promise<void> {
+  await apiFetch<{ success: boolean }>("/api/auth/logout", {
+    method: "POST",
+    skipAuthRetry: true,
   });
 }

@@ -13,7 +13,10 @@ import { Modal } from "@/components/Modal";
 import { PageShell } from "@/components/PageShell";
 import { NotificationViewport } from "@/components/ui/NotificationViewport";
 import { InventoryPageSkeleton } from "@/components/ui/skeletons/InventoryPageSkeleton";
-import { ConflictError } from "@/lib/api/api-errors";
+import {
+  getApiErrorSupportCode,
+  getUserFriendlyErrorMessage,
+} from "@/lib/api/api-error-messages";
 import {
   applyInventoryFilters,
   defaultInventoryFilters,
@@ -36,6 +39,7 @@ export default function InventoryPage() {
     createCategory,
     error: categoriesError,
     isLoading: isLoadingCategories,
+    refetch: refetchCategories,
     removeCategory,
     updateCategory,
   } = useInventoryCategories();
@@ -44,6 +48,7 @@ export default function InventoryPage() {
     error: itemsError,
     isLoading: isLoadingItems,
     items,
+    refetch: refetchItems,
     removeItem,
     updateItem,
   } = useInventoryItems();
@@ -97,6 +102,13 @@ export default function InventoryPage() {
   const shouldShowInventoryNotification =
     Boolean(itemsError || categoriesError) ||
     (Boolean(mutationError) && !isFormMutationError);
+  const queryError = itemsError ?? categoriesError;
+  const queryErrorMessage = queryError
+    ? getUserFriendlyErrorMessage(queryError)
+    : null;
+  const querySupportCode = queryError
+    ? getApiErrorSupportCode(queryError)
+    : null;
 
   function openCreateFoodModal() {
     if (isWriteBlocked) {
@@ -125,18 +137,18 @@ export default function InventoryPage() {
   }
 
   function getMutationMessage(error: unknown) {
-    if (error instanceof ConflictError) {
-      return error.message;
-    }
-
-    if (error instanceof Error) {
-      return error.message;
+    if (typeof error !== "undefined") {
+      return getUserFriendlyErrorMessage(error);
     }
 
     return "Não foi possível salvar os dados agora. Tente novamente.";
   }
 
   async function saveFood(values: FoodFormSubmitValues) {
+    if (isSubmitting) {
+      return;
+    }
+
     setSubmitting(true);
     setMutationError(null);
 
@@ -156,7 +168,7 @@ export default function InventoryPage() {
   }
 
   async function deleteFood() {
-    if (!foodToDelete) {
+    if (!foodToDelete || isSubmitting) {
       return;
     }
 
@@ -176,6 +188,10 @@ export default function InventoryPage() {
   async function createCustomCategory(
     category: Omit<FoodCategory, "id" | "isSystem" | "sortOrder">,
   ) {
+    if (isSubmitting) {
+      return;
+    }
+
     setSubmitting(true);
     setMutationError(null);
 
@@ -193,6 +209,10 @@ export default function InventoryPage() {
   }
 
   async function updateCustomCategory(category: FoodCategory) {
+    if (isSubmitting) {
+      return;
+    }
+
     setSubmitting(true);
     setMutationError(null);
 
@@ -206,6 +226,10 @@ export default function InventoryPage() {
   }
 
   async function deleteCustomCategory(category: FoodCategory) {
+    if (isSubmitting) {
+      return;
+    }
+
     setSubmitting(true);
     setMutationError(null);
 
@@ -233,15 +257,32 @@ export default function InventoryPage() {
           autoDismissMs={6500}
           className="max-w-2xl"
           description={
-            mutationError
+            querySupportCode
+              ? `Codigo de suporte: ${querySupportCode}`
+              : mutationError
               ? undefined
               : "Algumas informacoes podem estar desatualizadas no momento."
           }
           isOpen
           onDismiss={mutationError ? () => setMutationError(null) : undefined}
+          action={
+            queryError ? (
+              <Button
+                size="sm"
+                variant="secondary"
+                onClick={() => {
+                  void refetchItems({ force: true }).catch(() => undefined);
+                  void refetchCategories({ force: true }).catch(() => undefined);
+                }}
+              >
+                Tentar novamente
+              </Button>
+            ) : undefined
+          }
           title={
             mutationError ??
-            "Nao foi possivel atualizar todos os dados do estoque agora."
+            queryErrorMessage ??
+            "Algo deu errado. Tente novamente."
           }
           variant="error"
         />
